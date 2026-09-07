@@ -1,0 +1,30 @@
+Column_Name,Full_Name,Unit,WHO_Guideline_Limit,Pakistan_NDWQS,Description
+Study_ID,Study Identifier,—,—,—,Unique short code for the source study or report
+Authors_Source,Authors or Publishing Institution,—,—,—,Main authors or organization (e.g. PCRWR, Shedayi et al.)
+Year,Publication or Sampling Year,YYYY,—,—,Year of the study or sampling campaign
+District,Administrative District,—,—,—,Gilgit, Skardu, Hunza, Ghizar, Astore, Diamer, Ghanche, Nagar etc.
+Location,Specific Location or Village,—,—,—,Village, valley or town name
+Water_Source_Type,Type of Water Source,—,—,—,Spring, Nallah/Stream, River, Tap/Piped, Groundwater, Glacier-fed, Mixed
+Sample_Type,Point of Sampling,—,—,—,Source, Mid-system, Tap, Point-of-Use (PoU)
+Season,Season of Sampling,—,—,—,Summer, Winter, Mixed, or specific months if known
+N_Samples,Number of Samples,count,—,—,Number of individual samples behind the reported value (if aggregated)
+Temperature_C,Water Temperature,°C,No health-based guideline,—,Temperature at time of sampling
+pH,Potential of Hydrogen,—,6.5 – 8.5,6.5 – 8.5,Acidity / alkalinity of water
+EC_uS_cm,Electrical Conductivity,µS/cm,< 1500 (aesthetic),— ,Indicator of total dissolved ions
+Turbidity_NTU,Turbidity,NTU,< 5 (preferably < 1),< 5,Cloudiness / suspended particles
+TDS_mg_L,Total Dissolved Solids,mg/L,< 1000 (aesthetic),< 1000,Total dissolved substances
+DO_mg_L,Dissolved Oxygen,mg/L,No strict drinking limit (usually > 5 preferred),—,Oxygen dissolved in water
+Hardness_mg_L,Total Hardness (as CaCO3),mg/L,< 500 (aesthetic),< 500,Calcium + Magnesium content
+Alkalinity_mg_L,Total Alkalinity,mg/L,No strict limit,—,Buffering capacity
+Ca_mg_L,Calcium,mg/L,< 200 (aesthetic),—,Calcium ion concentration
+Mg_mg_L,Magnesium,mg/L,< 150 (aesthetic),—,Magnesium ion concentration
+Cl_mg_L,Chloride,mg/L,< 250,< 250,Chloride ion concentration
+Fe_mg_L,Iron,mg/L,< 0.3,< 0.3,Iron concentration
+As_mg_L,Arsenic,mg/L,< 0.01,< 0.05 (NSDWQ),Arsenic concentration (highly toxic)
+E_coli_CFU_100ml,Escherichia coli,CFU or MPN / 100 ml,Must be 0,Must be 0,Faecal contamination indicator – zero tolerance
+Total_Coliform_CFU_100ml,Total Coliforms,CFU or MPN / 100 ml,Must be 0 in 100 ml,Must be 0,General bacterial contamination indicator
+WHO_pH_Pass,WHO pH Compliance,—,Pass / Fail,—,Whether pH is within 6.5-8.5
+WHO_Turbidity_Pass,WHO Turbidity Compliance,—,Pass / Fail,—,Whether turbidity < 5 NTU
+WHO_Ecoli_Pass,WHO E. coli Compliance,—,Pass / Fail,—,Whether E. coli = 0
+Overall_Safe,Overall Safety Assessment,—,Yes / No / Partial,—,Overall judgement based on key parameters (especially microbial)
+Notes,Additional Information,—,—,—,Important context, ranges, or comments from the original study
