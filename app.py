@@ -17,14 +17,16 @@ from sklearn.metrics import (
     accuracy_score,
     average_precision_score,
     balanced_accuracy_score,
+    confusion_matrix,
     f1_score,
     make_scorer,
     matthews_corrcoef,
     precision_score,
     recall_score,
     roc_auc_score,
+    roc_curve,
 )
-from sklearn.model_selection import StratifiedKFold, cross_validate
+from sklearn.model_selection import StratifiedKFold, cross_val_predict, cross_validate
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
@@ -209,7 +211,14 @@ def run_model_lab(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.D
         if hasattr(fitted_model, "coef_"):
             importance_frames.append(pd.DataFrame({"Feature": feature_columns, "Importance": np.abs(fitted_model.coef_[0][:len(feature_columns)]), "Model": name, "Method": "Coefficient magnitude"}))
         predictions = pipeline.predict_proba(x_data)[:, 1]
-        prediction_frames.append(pd.DataFrame({"Study_ID": frame["Study_ID"], "Observed": y_data, "Predicted probability": predictions, "Model": name}))
+        oof_predictions = cross_val_predict(pipeline, x_data, y_data, cv=folds, method="predict_proba")[:, 1]
+        prediction_frames.append(pd.DataFrame({
+            "Study_ID": frame["Study_ID"],
+            "Observed": y_data,
+            "Predicted probability": predictions,
+            "OOF probability": oof_predictions,
+            "Model": name,
+        }))
     return (
         pd.DataFrame(comparison_rows),
         pd.concat(importance_frames, ignore_index=True),
@@ -431,10 +440,70 @@ with right:
     fig.update_layout(height=430, margin=dict(l=0, r=0, t=20, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", legend_title_text="", font_family="DM Sans", xaxis_title="", yaxis_title="")
     st.plotly_chart(fig, use_container_width=True)
 
+st.markdown('<div class="section-kicker">02B · Water sources and seasonality</div><h2>Where and when samples were taken</h2>', unsafe_allow_html=True)
+source_col, season_col = st.columns(2)
+with source_col:
+    source_counts = filtered.assign(Water_Source_Type=filtered["Water_Source_Type"].map(clean_label)).groupby(["Water_Source_Type", "Risk_Band"], as_index=False).size().rename(columns={"size": "Records"})
+    fig = px.bar(source_counts, x="Records", y="Water_Source_Type", color="Risk_Band", orientation="h", color_discrete_map={"High risk": "#e77c42", "Watch": "#e9b949", "Lower risk": "#087f73"})
+    fig.update_layout(height=360, margin=dict(l=0, r=0, t=20, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", legend_title_text="", font_family="DM Sans", xaxis_title="", yaxis_title="")
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption("Records by water source type")
+with season_col:
+    season_data = filtered.assign(Season=filtered["Season"].map(clean_label))
+    if season_data["pH"].notna().sum() >= 3:
+        fig = px.box(season_data, x="Season", y="pH", color="Season", points="all", color_discrete_sequence=["#087f73", "#e77c42", "#e9b949", "#2387a7"])
+        fig.update_layout(height=360, margin=dict(l=0, r=0, t=20, b=0), showlegend=False, plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans", xaxis_title="", yaxis_title="pH")
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption("pH spread by reported season")
+    else:
+        st.info("Not enough reported pH values to chart seasonal spread.")
+
+source_table = (
+    filtered.assign(Water_Source_Type=filtered["Water_Source_Type"].map(clean_label))
+    .groupby("Water_Source_Type")
+    .agg(Records=("Study_ID", "count"), **{"Mean risk score": ("Risk_Score", "mean")}, **{"High-risk records": ("Risk_Band", lambda values: int((values == "High risk").sum()))})
+    .reset_index()
+    .sort_values("Records", ascending=False)
+)
+source_table["Mean risk score"] = source_table["Mean risk score"].round(1)
+st.markdown("#### Water source summary table")
+st.dataframe(source_table, use_container_width=True, hide_index=True, height=240)
+
+st.markdown('<div class="section-kicker">02C · Distribution and correlation</div><h2>How reported indicators relate</h2>', unsafe_allow_html=True)
+stats_col, corr_col = st.columns([1, 1.2])
+with stats_col:
+    summary_stats = filtered[NUMERIC_COLUMNS].describe().T[["count", "mean", "std", "min", "max"]].round(2)
+    summary_stats.index.name = "Indicator"
+    summary_stats = summary_stats.reset_index()
+    st.markdown("#### Descriptive statistics")
+    st.dataframe(summary_stats, use_container_width=True, hide_index=True, height=380)
+with corr_col:
+    correlation_columns = [column for column in NUMERIC_COLUMNS if filtered[column].notna().sum() >= 3]
+    if len(correlation_columns) >= 2:
+        correlation = filtered[correlation_columns].corr().round(2)
+        fig = px.imshow(correlation, color_continuous_scale=["#e77c42", "#fbfdfc", "#087f73"], zmin=-1, zmax=1, text_auto=True, aspect="auto")
+        fig.update_layout(height=420, margin=dict(l=0, r=0, t=20, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans")
+        st.plotly_chart(fig, use_container_width=True)
+        st.caption("Pairwise correlation of reported numeric indicators")
+    else:
+        st.info("Not enough overlapping numeric indicators to compute correlations.")
+
 st.markdown('<div class="section-kicker">03 · Source records</div><h2>Explore the records</h2>', unsafe_allow_html=True)
+district_summary = (
+    filtered.assign(District=filtered["District"].map(clean_label))
+    .groupby("District")
+    .agg(Records=("Study_ID", "count"), **{"Mean risk score": ("Risk_Score", "mean")}, **{"Safe records": ("Overall_Safe", lambda values: int((values == "Yes").sum()))})
+    .reset_index()
+    .sort_values("Mean risk score", ascending=False)
+)
+district_summary["Mean risk score"] = district_summary["Mean risk score"].round(1)
+st.markdown("#### District summary table")
+st.dataframe(district_summary, use_container_width=True, hide_index=True, height=240)
+
 display_columns = ["Study_ID", "Year", "District", "Location", "Water_Source_Type", "Risk_Band", "Risk_Score", "WHO_pH_Pass", "WHO_Turbidity_Pass", "WHO_Ecoli_Pass", "Notes"]
 table = filtered[display_columns].copy()
 table.columns = [column.replace("_", " ") for column in table.columns]
+st.markdown("#### Full record table")
 st.dataframe(table, use_container_width=True, hide_index=True, height=410)
 
 st.markdown('<div class="section-kicker">04 · Explainable AI lab</div><h2>Compare models and explanations</h2>', unsafe_allow_html=True)
@@ -495,6 +564,29 @@ if len(data) >= 6 and int((data["Risk_Score"] >= 70).sum()) >= 3:
     scorecard = scorecard[["Rank", "Model", "Family", "Selected metric", "Metric variability", *metric_labels.values(), "Explanation methods"]].sort_values(["Rank", "Model"])
     st.markdown("#### Model scorecard")
     st.dataframe(scorecard, use_container_width=True, hide_index=True, height=410)
+
+    st.markdown("#### Out-of-fold validation: confusion matrix and ROC curve")
+    model_predictions = predictions[predictions["Model"] == selected_model]
+    observed_labels = model_predictions["Observed"].to_numpy()
+    oof_probability = model_predictions["OOF probability"].to_numpy()
+    oof_predicted = (oof_probability >= 0.5).astype(int)
+    confusion_col, roc_col = st.columns(2)
+    with confusion_col:
+        matrix = confusion_matrix(observed_labels, oof_predicted, labels=[0, 1])
+        confusion_table = pd.DataFrame(matrix, index=["Actual: not high-risk", "Actual: high-risk"], columns=["Predicted: not high-risk", "Predicted: high-risk"]).reset_index(names="")
+        st.dataframe(confusion_table, use_container_width=True, hide_index=True, height=140)
+        st.caption(f"{selected_model} · out-of-fold predictions at a 0.5 probability threshold")
+    with roc_col:
+        if len(np.unique(observed_labels)) == 2:
+            false_positive_rate, true_positive_rate, _ = roc_curve(observed_labels, oof_probability)
+            roc_data = pd.DataFrame({"False positive rate": false_positive_rate, "True positive rate": true_positive_rate})
+            fig = px.line(roc_data, x="False positive rate", y="True positive rate")
+            fig.add_shape(type="line", x0=0, y0=0, x1=1, y1=1, line=dict(color="#c7d3ce", dash="dash"))
+            fig.update_traces(line_color="#087f73")
+            fig.update_layout(height=260, margin=dict(l=0, r=0, t=10, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans")
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("ROC curve needs both classes present in the current selection.")
 
     available_methods = importance[importance["Model"] == selected_model]["Method"].drop_duplicates().tolist()
     selected_method = st.selectbox("Explanation method", available_methods)
