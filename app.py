@@ -33,6 +33,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+from research_paper_content import render_research_paper
 
 
 st.set_page_config(
@@ -300,6 +301,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+if st.query_params.get("view") == "research":
+    render_research_paper()
+    if st.button("← Return to dashboard", use_container_width=False):
+        st.query_params.clear()
+        st.rerun()
+    st.stop()
+
 try:
     data, repaired_rows = load_dataset()
 except FileNotFoundError:
@@ -343,9 +351,9 @@ st.markdown(
 )
 research_left, research_center, research_right = st.columns([1, 2, 1])
 with research_center:
-    research_page = Path(__file__).parent / "pages" / "Research_Paper.py"
     if st.button("📄  Read the Full Research Paper", use_container_width=True, type="primary"):
-        st.switch_page(research_page)
+        st.query_params["view"] = "research"
+        st.rerun()
 
 if repaired_rows:
     st.markdown(
