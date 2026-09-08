@@ -13,7 +13,17 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.impute import SimpleImputer
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import make_scorer, balanced_accuracy_score, f1_score
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    balanced_accuracy_score,
+    f1_score,
+    make_scorer,
+    matthews_corrcoef,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 from sklearn.model_selection import StratifiedKFold, cross_validate
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
@@ -139,6 +149,12 @@ def model_pipeline(model: object, scale: bool = False) -> Pipeline:
     return Pipeline(steps)
 
 
+def specificity_score(y_true: object, y_pred: object) -> float:
+    true_negatives = int(((np.asarray(y_true) == 0) & (np.asarray(y_pred) == 0)).sum())
+    false_positives = int(((np.asarray(y_true) == 0) & (np.asarray(y_pred) == 1)).sum())
+    return true_negatives / (true_negatives + false_positives) if true_negatives + false_positives else 0.0
+
+
 @st.cache_data(show_spinner=False)
 def run_model_lab(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
     feature_columns = [
@@ -161,17 +177,29 @@ def run_model_lab(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.D
         "Gaussian Naive Bayes": model_pipeline(GaussianNB(), scale=True),
     }
     folds = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
-    scoring = {"balanced_accuracy": make_scorer(balanced_accuracy_score), "f1": make_scorer(f1_score, zero_division=0)}
+    scoring = {
+        "accuracy": make_scorer(accuracy_score),
+        "balanced_accuracy": make_scorer(balanced_accuracy_score),
+        "precision": make_scorer(precision_score, zero_division=0),
+        "recall": make_scorer(recall_score, zero_division=0),
+        "specificity": make_scorer(specificity_score),
+        "f1": make_scorer(f1_score, zero_division=0),
+        "roc_auc": make_scorer(roc_auc_score, response_method="predict_proba"),
+        "pr_auc": make_scorer(average_precision_score, response_method="predict_proba"),
+        "mcc": make_scorer(matthews_corrcoef),
+    }
     comparison_rows: list[dict[str, object]] = []
     importance_frames: list[pd.DataFrame] = []
     prediction_frames: list[pd.DataFrame] = []
     for name, pipeline in models.items():
         scores = cross_validate(pipeline, x_data, y_data, cv=folds, scoring=scoring, error_score=np.nan)
-        comparison_rows.append({
-            "Model": name,
-            "Balanced accuracy": float(np.nanmean(scores["test_balanced_accuracy"])),
-            "F1 score": float(np.nanmean(scores["test_f1"])),
-        })
+        comparison_rows.append({"Model": name, **{
+            metric: float(np.nanmean(scores[f"test_{metric}"]))
+            for metric in scoring
+        }, **{
+            f"{metric} std": float(np.nanstd(scores[f"test_{metric}"]))
+            for metric in scoring
+        }})
         pipeline.fit(x_data, y_data)
         permutation = permutation_importance(pipeline, x_data, y_data, scoring="balanced_accuracy", n_repeats=12, random_state=42)
         importance_frames.append(pd.DataFrame({"Feature": feature_columns, "Importance": permutation.importances_mean, "Model": name, "Method": "Permutation importance"}))
@@ -418,16 +446,29 @@ st.markdown(
 if len(data) >= 6 and int((data["Risk_Score"] >= 70).sum()) >= 3:
     comparison, importance, predictions, model_features = run_model_lab(data)
     model_names = comparison["Model"].tolist()
+    metric_labels = {
+        "accuracy": "Accuracy",
+        "balanced_accuracy": "Balanced accuracy",
+        "precision": "Precision",
+        "recall": "Recall / sensitivity",
+        "specificity": "Specificity",
+        "f1": "F1 score",
+        "roc_auc": "ROC AUC",
+        "pr_auc": "PR AUC",
+        "mcc": "Matthews correlation",
+    }
+    selected_metric = st.selectbox("Performance metric", list(metric_labels), format_func=metric_labels.get, index=1)
     selected_model = st.selectbox("Model for explanation", model_names, index=2)
     model_col, explanation_col = st.columns([1.35, 1])
     with model_col:
-        comparison_long = comparison.melt(id_vars="Model", var_name="Metric", value_name="Score")
-        fig = px.bar(comparison_long, x="Model", y="Score", color="Metric", barmode="group", range_y=[0, 1], color_discrete_sequence=["#087f73", "#e77c42"])
-        fig.update_layout(height=340, margin=dict(l=0, r=0, t=15, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans", yaxis_title="3-fold mean score", xaxis_title="", legend_title_text="")
+        chart_data = comparison[["Model", selected_metric]].rename(columns={selected_metric: "Score"}).sort_values("Score")
+        score_range = [-1, 1] if selected_metric == "mcc" else [0, 1]
+        fig = px.bar(chart_data, x="Score", y="Model", orientation="h", color="Score", range_x=score_range, color_continuous_scale=["#d8f1ec", "#087f73"])
+        fig.update_layout(height=370, margin=dict(l=0, r=0, t=15, b=0), coloraxis_showscale=False, plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans", xaxis_title=f"3-fold mean {metric_labels[selected_metric]}", yaxis_title="")
         st.plotly_chart(fig, use_container_width=True)
     with explanation_col:
         st.markdown('<div class="panel-note"><h3>Model comparison</h3>', unsafe_allow_html=True)
-        st.write("The scorecard compares linear, tree, distance-based, kernel, and probabilistic classifiers using the same folds. Scores are descriptive because the dataset is small and highly aggregated.")
+        st.write("The scorecard compares linear, tree, distance-based, kernel, and probabilistic classifiers using the same folds. No single metric is sufficient: recall captures missed high-risk records, specificity captures false alarms, and PR AUC is useful when high-risk labels are rare.")
         st.markdown(f'<div class="small-note">Features used: {", ".join(model_features)}. Missing values are median-imputed with missingness indicators.</div></div>', unsafe_allow_html=True)
     model_families = {
         "Logistic regression": "Linear",
@@ -444,12 +485,14 @@ if len(data) >= 6 and int((data["Risk_Score"] >= 70).sum()) >= 3:
     }
     methods_by_model = importance.groupby("Model")["Method"].apply(lambda values: ", ".join(values.drop_duplicates())).to_dict()
     scorecard = comparison.copy()
-    scorecard["Rank"] = scorecard["Balanced accuracy"].rank(method="min", ascending=False).astype(int)
+    scorecard["Rank"] = scorecard[selected_metric].rank(method="min", ascending=False).astype(int)
     scorecard["Family"] = scorecard["Model"].map(model_families)
     scorecard["Explanation methods"] = scorecard["Model"].map(methods_by_model)
-    scorecard["Balanced accuracy"] = scorecard["Balanced accuracy"].map(lambda value: f"{value:.1%}")
-    scorecard["F1 score"] = scorecard["F1 score"].map(lambda value: f"{value:.1%}")
-    scorecard = scorecard[["Rank", "Model", "Family", "Balanced accuracy", "F1 score", "Explanation methods"]].sort_values(["Rank", "Model"])
+    scorecard["Selected metric"] = scorecard[selected_metric].map(lambda value: f"{value:.1%}")
+    scorecard["Metric variability"] = scorecard[f"{selected_metric} std"].map(lambda value: f"± {value:.1%}")
+    for metric in metric_labels:
+        scorecard[metric_labels[metric]] = scorecard[metric].map(lambda value: f"{value:.1%}")
+    scorecard = scorecard[["Rank", "Model", "Family", "Selected metric", "Metric variability", *metric_labels.values(), "Explanation methods"]].sort_values(["Rank", "Model"])
     st.markdown("#### Model scorecard")
     st.dataframe(scorecard, use_container_width=True, hide_index=True, height=410)
 

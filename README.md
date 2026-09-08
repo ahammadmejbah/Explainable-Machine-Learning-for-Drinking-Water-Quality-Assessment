@@ -16,9 +16,10 @@ The dashboard opens at `http://localhost:8501` and includes:
 - A searchable record table with reported WHO compliance fields
 - A transparent rule-based risk score for explainability
 - An exploratory Explainable AI lab comparing logistic regression, decision trees, random forests, extra trees, gradient boosting, AdaBoost, histogram gradient boosting, K-nearest neighbors, support vector machines, linear discriminant analysis, and Gaussian Naive Bayes
+- A multi-metric model scorecard with accuracy, balanced accuracy, precision, recall/sensitivity, specificity, F1, ROC AUC, PR AUC, Matthews correlation, and fold-to-fold variability
 - Global permutation-importance plots, native tree importance, logistic coefficient magnitude, and local study-level probability explanations
 - A data-quality notice for the source CSV's unquoted commas
 
 The source is a multi-study compilation, not a replacement for laboratory testing or regulatory certification. Numeric ranges and narrative findings remain as reported; cite the original study listed in `Authors_Source` when using the data.
 
-The Explainable AI lab is intentionally exploratory because the current compilation has 25 aggregated records and only three high-risk labels. It uses 3-fold stratified validation, median imputation with missingness indicators, and numeric fields reported in at least five records. Model scores and explanations should be treated as hypothesis-generating until more individual-sample data is available.
+The Explainable AI lab is intentionally exploratory because the current compilation has 25 aggregated records and only three high-risk labels. It uses 3-fold stratified validation, median imputation with missingness indicators, and numeric fields reported in at least five records. Model scores and explanations should be treated as hypothesis-generating until more individual-sample data is available. PR AUC is included because the high-risk class is rare; specificity complements recall by showing how often lower-risk records avoid false alarms.
