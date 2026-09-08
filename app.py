@@ -488,6 +488,52 @@ with corr_col:
     else:
         st.info("Not enough overlapping numeric indicators to compute correlations.")
 
+st.markdown('<div class="section-kicker">02D · Contaminant deep dive</div><h2>Where the evidence concentrates</h2>', unsafe_allow_html=True)
+top_risk_col, compliance_col = st.columns([1.2, 1])
+with top_risk_col:
+    top_risk_table = (
+        filtered.assign(District=filtered["District"].map(clean_label))
+        .sort_values("Risk_Score", ascending=False)
+        [["Study_ID", "District", "Year", "Water_Source_Type", "Risk_Score", "Risk_Band"]]
+        .head(10)
+        .reset_index(drop=True)
+    )
+    top_risk_table.columns = [column.replace("_", " ") for column in top_risk_table.columns]
+    st.markdown("#### Top 10 highest-risk studies")
+    st.dataframe(top_risk_table, use_container_width=True, hide_index=True, height=380)
+with compliance_col:
+    compliance_rows = []
+    for column, label in {"WHO_pH_Pass": "pH", "WHO_Turbidity_Pass": "Turbidity", "WHO_Ecoli_Pass": "E. coli", "Overall_Safe": "Overall safe"}.items():
+        counts = filtered[column].replace("", "Not reported").value_counts()
+        compliance_rows.append({
+            "Guideline": label,
+            "Pass": int(counts.get("Yes", 0)),
+            "Fail": int(counts.get("No", 0)),
+            "Not reported": int(counts.get("Not reported", 0)),
+        })
+    compliance_table = pd.DataFrame(compliance_rows)
+    st.markdown("#### WHO compliance summary")
+    st.dataframe(compliance_table, use_container_width=True, hide_index=True, height=180)
+
+    completeness = (filtered[NUMERIC_COLUMNS].notna().mean() * 100).round(0).sort_values(ascending=True).reset_index()
+    completeness.columns = ["Indicator", "Reported (%)"]
+    fig = px.bar(completeness, x="Reported (%)", y="Indicator", orientation="h", range_x=[0, 100], color="Reported (%)", color_continuous_scale=["#e77c42", "#087f73"])
+    fig.update_layout(height=380, margin=dict(l=0, r=0, t=15, b=0), coloraxis_showscale=False, plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", font_family="DM Sans", xaxis_title="Reported (%)", yaxis_title="")
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption("Data completeness by indicator in the current view")
+
+microbial_data = filtered.dropna(subset=["Turbidity_NTU", "E_coli_CFU_100ml"])
+if len(microbial_data) >= 3:
+    fig = px.scatter(
+        microbial_data, x="Turbidity_NTU", y="E_coli_CFU_100ml", color="Risk_Band", hover_name="Study_ID",
+        color_discrete_map={"High risk": "#e77c42", "Watch": "#e9b949", "Lower risk": "#087f73"},
+    )
+    fig.update_layout(height=380, margin=dict(l=0, r=0, t=20, b=0), plot_bgcolor="#fbfdfc", paper_bgcolor="#fbfdfc", legend_title_text="", font_family="DM Sans", xaxis_title="Turbidity (NTU)", yaxis_title="E. coli (CFU/100ml)")
+    st.plotly_chart(fig, use_container_width=True)
+    st.caption("Physicochemical vs. microbial contamination, by risk band")
+else:
+    st.info("Not enough paired turbidity and E. coli values to chart contamination.")
+
 st.markdown('<div class="section-kicker">03 · Source records</div><h2>Explore the records</h2>', unsafe_allow_html=True)
 district_summary = (
     filtered.assign(District=filtered["District"].map(clean_label))
