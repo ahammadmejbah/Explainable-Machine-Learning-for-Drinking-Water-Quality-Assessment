@@ -343,7 +343,9 @@ st.markdown(
 )
 research_left, research_center, research_right = st.columns([1, 2, 1])
 with research_center:
-    st.page_link("pages/Research_Paper.py", label="Read the Full Research Paper", icon="📄", use_container_width=True)
+    research_page = Path(__file__).parent / "pages" / "Research_Paper.py"
+    if st.button("📄  Read the Full Research Paper", use_container_width=True, type="primary"):
+        st.switch_page(research_page)
 
 if repaired_rows:
     st.markdown(
