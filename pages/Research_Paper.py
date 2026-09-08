@@ -4,7 +4,7 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="Research Paper | GB Water Intelligence",
+    page_title="Research Paper | Explainable Machine Learning for Drinking Water Quality Assessment in Gilgit-Baltistan",
     page_icon="📄",
     layout="wide",
     initial_sidebar_state="collapsed",

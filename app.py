@@ -37,7 +37,7 @@ from research_paper_content import render_research_paper
 
 
 st.set_page_config(
-    page_title="GB Water Intelligence",
+    page_title="Explainable Machine Learning for Drinking Water Quality Assessment in Gilgit-Baltistan",
     page_icon="💧",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -314,7 +314,7 @@ except FileNotFoundError:
     st.error(f"Dataset not found at {DATA_PATH}")
     st.stop()
 
-st.sidebar.markdown("## GB Water Intelligence")
+st.sidebar.markdown("## Explainable Machine Learning for Drinking Water Quality Assessment in Gilgit-Baltistan")
 st.sidebar.caption("Evidence-led water safety analysis")
 st.sidebar.markdown('<div class="small-note">MULTI-STUDY COMPILATION<br><strong>2000 — 2026</strong></div>', unsafe_allow_html=True)
 st.sidebar.markdown("### Filters")
