@@ -284,6 +284,9 @@ st.markdown(
     [data-testid="stSidebar"] { background: #f1f7f5; border-right: 1px solid var(--line); }
     [data-testid="stSidebar"] h2 { font-size: 1.1rem; }
     .small-note { color: var(--muted); font-size: .8rem; }
+    .research-nav { text-align:center; margin: .4rem 0 1.7rem; }
+    .research-nav-label { color:var(--muted); font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.6rem; }
+    .footer { border-top:1px solid var(--line); margin-top:3rem; padding-top:1rem; color:var(--muted); font-size:.8rem; text-align:center; }
     @media (max-width: 760px) {
         .block-container { padding: 1.4rem 1rem 2rem; }
         .hero { display:block; padding-top:.5rem; }
@@ -333,6 +336,14 @@ st.markdown(
     '<span class="topline-status"><span class="status-dot"></span> Dataset loaded · 25 source records</span></div>',
     unsafe_allow_html=True,
 )
+
+st.markdown(
+    '<div class="research-nav"><div class="research-nav-label">Research and methods</div></div>',
+    unsafe_allow_html=True,
+)
+research_left, research_center, research_right = st.columns([1, 2, 1])
+with research_center:
+    st.page_link("pages/Research_Paper.py", label="Read the Full Research Paper", icon="📄", use_container_width=True)
 
 if repaired_rows:
     st.markdown(
@@ -658,3 +669,5 @@ with st.expander("Method and data dictionary"):
     st.write("The dashboard uses the provided multi-study compilation. Risk Score is an interpretable heuristic: pH failure = 25, turbidity failure = 25, E. coli failure = 40, and an overall unsafe judgement = 10 points, capped at 100.")
     st.write("WHO reference points in the supplied dictionary include pH 6.5–8.5, turbidity below 5 NTU, and zero E. coli. Aggregated values, ranges, and narrative findings are kept as reported rather than imputed.")
     st.write("Source: `Datasets/gb_water_quality_2000_2026.csv` and `Datasets/data_dictionary.csv`. Cite the original study listed in `Authors_Source` for publication use.")
+
+st.markdown('<div class="footer">© 2026 Mejbah Ahammad | Lead AI Instructor &amp; Research Scientist Portfolio</div>', unsafe_allow_html=True)
