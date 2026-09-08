@@ -1,0 +1,38 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#F7FBFA"/>
+  <rect x="40" y="60" width="1120" height="580" rx="26" fill="#FFFFFF" stroke="#D9E4E0"/>
+  <path d="M80 520C150 470 220 430 303 420C385 410 430 470 520 470C590 470 635 432 708 432C794 432 860 465 920 480C989 497 1038 500 1120 470V620H80V520Z" fill="#DDF3F1"/>
+  <path d="M70 540H1130C1078 562 1020 580 960 578C875 575 835 528 756 528C671 528 633 579 552 581C471 583 434 539 360 534C278 529 228 573 150 584C117 589 90 584 70 540Z" fill="#B6E3DA"/>
+  <path d="M72 430C304 315 346 250 440 205C487 179 530 171 579 172C629 173 672 185 734 213C817 249 874 304 1128 418V478H72V430Z" fill="#E9F7F5"/>
+  <path d="M80 598C140 560 210 544 291 544C347 544 404 561 451 568C502 576 538 562 599 557C646 553 692 566 756 578C835 592 907 595 952 576C992 559 1037 540 1120 553V620H80V598Z" fill="#64B8D1" opacity="0.42"/>
+  <path d="M177 515C222 465 284 429 334 428C380 427 418 452 463 470C518 493 572 492 617 468C655 447 686 430 745 430C812 430 845 459 892 504L969 570H157L177 515Z" fill="#3BAECD" opacity="0.5"/>
+  <circle cx="846" cy="175" r="46" fill="#F4C95D" opacity="0.75"/>
+  <path d="M843 108V174L876 199" stroke="#F4C95D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <g opacity="0.9">
+    <rect x="87" y="96" width="176" height="118" rx="18" fill="#0B7A73"/>
+    <text x="110" y="132" fill="#EAF9F6" font-family="Arial, sans-serif" font-size="28" font-weight="700">25</text>
+    <text x="110" y="172" fill="#DDEEEA" font-family="Arial, sans-serif" font-size="20">records</text>
+    <text x="110" y="196" fill="#DDEEEA" font-family="Arial, sans-serif" font-size="14">multi-study evidence</text>
+  </g>
+  <g opacity="0.94">
+    <rect x="955" y="94" width="152" height="110" rx="18" fill="#1F5D78"/>
+    <text x="980" y="130" fill="#F4F8F9" font-family="Arial, sans-serif" font-size="28" font-weight="700">11</text>
+    <text x="980" y="167" fill="#D8E9EE" font-family="Arial, sans-serif" font-size="20">models</text>
+  </g>
+  <g>
+    <rect x="415" y="242" width="415" height="152" rx="18" fill="#F3FAF8" stroke="#CFE6DF"/>
+    <text x="444" y="285" fill="#0C4D53" font-family="Arial, sans-serif" font-size="22" font-weight="700">Water quality indicators</text>
+    <text x="444" y="318" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">pH  •  Turbidity  •  E. coli  •  EC  •  TDS  •  arsenic</text>
+    <text x="444" y="350" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">District context • season • source type • compliance fields</text>
+  </g>
+  <g>
+    <rect x="165" y="418" width="192" height="108" rx="16" fill="#E8F8F4" stroke="#CFE7E1"/>
+    <text x="188" y="456" fill="#0E4B4E" font-family="Arial, sans-serif" font-size="22" font-weight="700">High risk</text>
+    <text x="188" y="490" fill="#3E5E63" font-family="Arial, sans-serif" font-size="18">E. coli + turbid / unsafe</text>
+  </g>
+  <g>
+    <rect x="825" y="414" width="210" height="110" rx="16" fill="#FFF4E0" stroke="#F0DDB1"/>
+    <text x="848" y="452" fill="#864C09" font-family="Arial, sans-serif" font-size="22" font-weight="700">Watch</text>
+    <text x="848" y="486" fill="#6B4C12" font-family="Arial, sans-serif" font-size="18">mixed or borderline signals</text>
+  </g>
+</svg>

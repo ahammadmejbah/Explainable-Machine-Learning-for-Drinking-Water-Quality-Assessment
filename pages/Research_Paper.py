@@ -54,6 +54,19 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+st.markdown(
+    '<div class="paper-section"><h2>Project overview</h2></div>',
+    unsafe_allow_html=True,
+)
+
+image_col1, image_col2 = st.columns(2)
+with image_col1:
+    st.image("assets/research/water_quality_overview.svg", caption="Figure 1. Study view of the Gilgit-Baltistan water-quality evidence landscape.", use_container_width=True)
+with image_col2:
+    st.image("assets/research/risk_pipeline.svg", caption="Figure 2. Transparent risk-scoring pipeline from indicator fail states to final risk bands.", use_container_width=True)
+
+st.image("assets/research/study_coverage.svg", caption="Figure 3. Conceptual study coverage and evidence-tracing model across district, type, season, and time dimensions.", use_container_width=True)
+
 metric_columns = st.columns(4)
 for column, value, label in zip(
     metric_columns,

@@ -1,0 +1,52 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#F7FBFA"/>
+  <rect x="42" y="52" width="1116" height="596" rx="32" fill="#FFFFFF" stroke="#D9E4E0"/>
+  <text x="110" y="112" fill="#0C4D53" font-family="Arial, sans-serif" font-size="34" font-weight="700">Transparent risk workflow</text>
+  <g>
+    <rect x="96" y="178" width="150" height="120" rx="16" fill="#EAF8F6" stroke="#CFE6DF"/>
+    <text x="127" y="216" fill="#0D766B" font-family="Arial, sans-serif" font-size="20" font-weight="700">pH</text>
+    <text x="127" y="247" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">Fail = +25</text>
+  </g>
+  <g>
+    <rect x="278" y="178" width="164" height="120" rx="16" fill="#EAF8F6" stroke="#CFE6DF"/>
+    <text x="312" y="216" fill="#0D766B" font-family="Arial, sans-serif" font-size="20" font-weight="700">Turbidity</text>
+    <text x="312" y="247" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">Fail = +25</text>
+  </g>
+  <g>
+    <rect x="482" y="178" width="164" height="120" rx="16" fill="#EAF8F6" stroke="#CFE6DF"/>
+    <text x="525" y="216" fill="#0D766B" font-family="Arial, sans-serif" font-size="20" font-weight="700">E. coli</text>
+    <text x="525" y="247" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">Fail = +40</text>
+  </g>
+  <g>
+    <rect x="687" y="178" width="176" height="120" rx="16" fill="#EAF8F6" stroke="#CFE6DF"/>
+    <text x="720" y="216" fill="#0D766B" font-family="Arial, sans-serif" font-size="20" font-weight="700">Overall</text>
+    <text x="720" y="247" fill="#3D5D5F" font-family="Arial, sans-serif" font-size="18">unsafe = +10</text>
+  </g>
+  <path d="M246 238H278" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M442 238H482" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M646 238H687" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M863 238H924" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <g>
+    <rect x="924" y="178" width="194" height="120" rx="18" fill="#0D766B"/>
+    <text x="955" y="216" fill="#F7FFFD" font-family="Arial, sans-serif" font-size="20" font-weight="700">Risk score</text>
+    <text x="955" y="247" fill="#DFF2EE" font-family="Arial, sans-serif" font-size="18">0-100 capped</text>
+  </g>
+  <g>
+    <rect x="170" y="426" width="220" height="116" rx="18" fill="#FFF4E0" stroke="#F3DBAA"/>
+    <text x="208" y="472" fill="#854E12" font-family="Arial, sans-serif" font-size="26" font-weight="700">High risk</text>
+    <text x="208" y="503" fill="#6F501C" font-family="Arial, sans-serif" font-size="18">score ≥ 70</text>
+  </g>
+  <g>
+    <rect x="450" y="426" width="220" height="116" rx="18" fill="#F0FAF8" stroke="#D4EAE3"/>
+    <text x="505" y="472" fill="#0C4D53" font-family="Arial, sans-serif" font-size="26" font-weight="700">Watch</text>
+    <text x="505" y="503" fill="#3C6A68" font-family="Arial, sans-serif" font-size="18">35 - 69</text>
+  </g>
+  <g>
+    <rect x="735" y="426" width="260" height="116" rx="18" fill="#E6F7F0" stroke="#CDECE0"/>
+    <text x="770" y="472" fill="#256A5E" font-family="Arial, sans-serif" font-size="26" font-weight="700">Lower risk</text>
+    <text x="770" y="503" fill="#466E64" font-family="Arial, sans-serif" font-size="18">score &lt; 35</text>
+  </g>
+  <path d="M531 300V426" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M850 300V426" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+  <path d="M1020 300V381C1020 394 1010 405 997 405H900" stroke="#5F847D" stroke-width="8" stroke-linecap="round"/>
+</svg>

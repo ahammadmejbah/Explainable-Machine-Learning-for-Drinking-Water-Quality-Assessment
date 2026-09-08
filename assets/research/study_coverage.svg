@@ -1,0 +1,28 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#F7FBFA"/>
+  <rect x="46" y="52" width="1108" height="596" rx="30" fill="#FFFFFF" stroke="#D9E4E0"/>
+  <g opacity="0.95">
+    <path d="M118 516L232 421L333 442L408 367L554 402L660 332L798 392L928 298L1044 376V566H118V516Z" fill="#EAF7F5"/>
+    <path d="M118 540L232 445L333 466L408 391L554 426L660 356L798 416L928 322L1044 400V566H118V540Z" fill="#D0EFE8"/>
+  </g>
+  <circle cx="280" cy="435" r="56" fill="#D9F4E9" stroke="#71B8A3" stroke-width="8"/>
+  <circle cx="430" cy="376" r="62" fill="#D9F4E9" stroke="#71B8A3" stroke-width="8"/>
+  <circle cx="664" cy="342" r="74" fill="#D9F4E9" stroke="#71B8A3" stroke-width="8"/>
+  <circle cx="874" cy="397" r="58" fill="#D9F4E9" stroke="#71B8A3" stroke-width="8"/>
+  <circle cx="976" cy="324" r="48" fill="#D9F4E9" stroke="#71B8A3" stroke-width="8"/>
+  <g>
+    <rect x="160" y="168" width="182" height="94" rx="18" fill="#0D766B"/>
+    <text x="188" y="206" fill="#F5FFFD" font-family="Arial, sans-serif" font-size="22" font-weight="700">District</text>
+    <text x="188" y="233" fill="#DFF0EC" font-family="Arial, sans-serif" font-size="18">comparison</text>
+  </g>
+  <g>
+    <rect x="805" y="168" width="206" height="94" rx="18" fill="#EAF7F5" stroke="#CFE6DF"/>
+    <text x="835" y="206" fill="#185D5A" font-family="Arial, sans-serif" font-size="22" font-weight="700">Seasonal</text>
+    <text x="835" y="233" fill="#3E6663" font-family="Arial, sans-serif" font-size="18">and source trends</text>
+  </g>
+  <g>
+    <rect x="468" y="482" width="250" height="96" rx="18" fill="#FFF4E0" stroke="#F1D7A3"/>
+    <text x="500" y="519" fill="#874F10" font-family="Arial, sans-serif" font-size="22" font-weight="700">25 records</text>
+    <text x="500" y="548" fill="#6E4C1A" font-family="Arial, sans-serif" font-size="18">from 2000–2026</text>
+  </g>
+</svg>
