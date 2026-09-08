@@ -19,6 +19,7 @@ The application is designed for research exploration and communication. It is no
 - [Limitations and responsible use](#limitations-and-responsible-use)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Citation](#citation)
 - [License and attribution](#license-and-attribution)
 
 ## Project goals
@@ -253,6 +254,28 @@ Contributions should preserve traceability and reproducibility. A useful change 
 5. Updated documentation when fields, commands, or interpretation change.
 
 Do not commit private laboratory records, credentials, or unverified claims about water safety.
+
+## Citation
+
+If you reuse this dashboard, source code, data compilation, figures, tables, or derived results, you **must cite this GitHub repository** and the original studies listed in `Authors_Source`. The repository citation is provided in [CITATION.bib](CITATION.bib):
+
+```bibtex
+@misc{ahammad2026explainable,
+	author       = {Ahammad, Mejbah},
+	title        = {Explainable Machine Learning for Drinking Water Quality Assessment in Gilgit-Baltistan},
+	year         = {2026},
+	publisher    = {GitHub},
+	howpublished = {GitHub repository},
+	url          = {https://github.com/ahammadmejbah/Explainable-Machine-Learning-for-Drinking-Water-Quality-Assessment-in-Gilgit-Baltistan},
+	note         = {Accessed: 2026-09-08}
+}
+```
+
+IEEE-style reference:
+
+> M. Ahammad, “Explainable Machine Learning for Drinking Water Quality Assessment in Gilgit-Baltistan,” GitHub repository, 2026. [Online]. Available: https://github.com/ahammadmejbah/Explainable-Machine-Learning-for-Drinking-Water-Quality-Assessment-in-Gilgit-Baltistan
+
+Please preserve the attribution notice when redistributing or building upon this work. Citation does not replace permission requirements or the licensing and reuse terms of the original studies.
 
 ## License and attribution
 
